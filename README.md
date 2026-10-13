@@ -195,4 +195,3 @@ Before launching to live customers:
 ## 📜 License
 
 Proprietary © Narmada Gaukhadh. All rights reserved.
-# narmada-gaukhadh

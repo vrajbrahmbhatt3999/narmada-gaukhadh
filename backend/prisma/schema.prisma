@@ -1,0 +1,90 @@
+// backend/prisma/schema.prisma
+// Run: npx prisma migrate dev --name init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Order {
+  id            String          @id @default(cuid())
+  orderRef      String          @unique // human-readable reference, e.g. NG-2024-0001
+  status        OrderStatus     @default(PENDING_PAYMENT)
+  customerName  String
+  customerEmail String
+  customerPhone String
+  addressLine1  String
+  addressLine2  String?
+  city          String
+  state         String
+  pincode       String
+  subtotal      Int             // in paise (1 INR = 100 paise)
+  deliveryCharge Int
+  totalAmount   Int             // in paise
+  items         OrderItem[]
+  payments      PaymentRecord[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id])
+  productId    String
+  productName  String  // snapshot
+  variantId    String
+  variantLabel String  // snapshot
+  sku          String  // snapshot
+  quantity     Int
+  unitPrice    Int     // in paise at time of order
+  lineTotal    Int     // in paise
+}
+
+model PaymentRecord {
+  id            String        @id @default(cuid())
+  orderId       String
+  order         Order         @relation(fields: [orderId], references: [id])
+  txnId         String        @unique // PayU transaction ID
+  payuOrderId   String?
+  status        PaymentStatus @default(INITIATED)
+  amount        Int           // in paise
+  paymentMode   String?
+  bankRefNum    String?
+  payuResponse  Json?         // full PayU callback (never store card data)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Enquiry {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  product   String
+  quantity  String
+  message   String?
+  createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PAYMENT_FAILED
+  PAYMENT_PENDING_VERIFICATION
+  CANCELLED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+}
+
+enum PaymentStatus {
+  INITIATED
+  SUCCESS
+  FAILURE
+  PENDING
+  CANCELLED
+}
