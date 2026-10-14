@@ -64,20 +64,20 @@ export function Navbar() {
             {/* Logo */}
             <Link
               to="/"
-              className="flex items-center gap-2 font-bold"
+              className="flex items-center gap-1.5 sm:gap-2 font-bold min-w-0 flex-shrink"
               aria-label="Narmada Gaukhadh — Home"
             >
               <div
-                className="flex items-center justify-center w-9 h-9 rounded-full"
+                className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full flex-shrink-0"
                 style={{ background: 'var(--color-forest)' }}
               >
-                <Leaf size={18} color="white" />
+                <Leaf size={16} color="white" />
               </div>
-              <div className="flex flex-col">
-                <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', color: 'var(--color-forest)', lineHeight: 1.1 }}>
+              <div className="flex flex-col min-w-0">
+                <span className="text-sm sm:text-base font-bold truncate" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-forest)', lineHeight: 1.1 }}>
                   {isGujarati ? SITE_CONFIG.brandNameGujarati : SITE_CONFIG.brandName}
                 </span>
-                <span className="text-[10px] text-stone-500 tracking-wider">
+                <span className="text-[9px] sm:text-[10px] text-stone-500 tracking-wider truncate">
                   {isGujarati ? 'પ્રાકૃતિક કૃષિ ઉત્પાદનો' : 'Pure Soil · Pure Crops'}
                 </span>
               </div>
@@ -116,7 +116,7 @@ export function Navbar() {
             </div>
 
             {/* Right actions */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
               {/* Language Switcher Pill */}
               <div
                 className="flex items-center p-0.5 rounded-full border"
@@ -129,7 +129,7 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={() => setLanguage('en')}
-                  className={`px-2 py-1 rounded-full text-xs font-bold transition-all ${
+                  className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all ${
                     language === 'en'
                       ? 'bg-forest text-white shadow-xs'
                       : 'text-stone-600 hover:text-forest'
@@ -145,7 +145,7 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={() => setLanguage('gu')}
-                  className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
+                  className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all ${
                     language === 'gu'
                       ? 'bg-forest text-white shadow-xs'
                       : 'text-stone-600 hover:text-forest'
@@ -171,14 +171,14 @@ export function Navbar() {
               {/* Cart Button */}
               <Link
                 to="/cart"
-                className="btn btn-icon relative"
+                className="btn btn-icon relative w-9 h-9 sm:w-10 sm:h-10"
                 style={{ border: '1.5px solid var(--color-border)', background: 'white' }}
                 aria-label={`Cart (${itemCount} items)`}
               >
-                <ShoppingCart size={20} style={{ color: 'var(--color-forest)' }} />
+                <ShoppingCart size={18} style={{ color: 'var(--color-forest)' }} />
                 {itemCount > 0 && (
                   <span
-                    className="absolute -top-1.5 -right-1.5 flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold text-white"
+                    className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full text-[10px] sm:text-xs font-bold text-white"
                     style={{ background: 'var(--color-forest)' }}
                     aria-hidden="true"
                   >
@@ -189,7 +189,7 @@ export function Navbar() {
 
               {/* Mobile menu button */}
               <button
-                className="btn btn-icon md:hidden"
+                className="btn btn-icon md:hidden w-9 h-9 sm:w-10 sm:h-10"
                 style={{ border: '1.5px solid var(--color-border)', background: 'white' }}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen}
@@ -197,9 +197,9 @@ export function Navbar() {
                 aria-label={isOpen ? 'Close menu' : 'Open menu'}
               >
                 {isOpen ? (
-                  <X size={20} style={{ color: 'var(--color-forest)' }} />
+                  <X size={18} style={{ color: 'var(--color-forest)' }} />
                 ) : (
-                  <Menu size={20} style={{ color: 'var(--color-forest)' }} />
+                  <Menu size={18} style={{ color: 'var(--color-forest)' }} />
                 )}
               </button>
             </div>

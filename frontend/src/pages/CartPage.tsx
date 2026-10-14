@@ -62,15 +62,12 @@ export function CartPage() {
                   className="card"
                   style={{ overflow: 'visible' }}
                 >
-                  <div className="card-body">
-                    <div className="flex gap-4">
+                  <div className="card-body p-3.5 sm:p-6">
+                    <div className="flex gap-3 sm:gap-4">
                       {/* Product thumbnail */}
                       <div
+                        className="w-14 h-14 sm:w-18 sm:h-18 flex-shrink-0 rounded-xl"
                         style={{
-                          width: '72px',
-                          height: '72px',
-                          flexShrink: 0,
-                          borderRadius: '0.75rem',
                           background: `linear-gradient(135deg, ${product.category === 'solid' ? '#8A6246, #56834D' : '#214E34, #56834D'})`,
                         }}
                       />

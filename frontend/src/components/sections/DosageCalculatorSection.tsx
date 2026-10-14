@@ -202,7 +202,7 @@ export function DosageCalculatorSection() {
         {/* Calculator Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Column */}
-          <div className="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-stone-200">
+          <div className="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-8 shadow-sm border border-stone-200">
             {/* Mode Selector */}
             <div className="mb-6">
               <label className="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">
@@ -365,7 +365,7 @@ export function DosageCalculatorSection() {
           <div className="lg:col-span-5">
             <motion.div
               layout
-              className="bg-emerald-950 text-white rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden"
+              className="bg-emerald-950 text-white rounded-2xl p-4 sm:p-8 shadow-xl relative overflow-hidden"
               style={{
                 background: 'linear-gradient(145deg, #163624 0%, #0d2317 100%)',
                 boxShadow: '0 20px 40px -15px rgba(13, 35, 23, 0.4)',

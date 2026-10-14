@@ -41,9 +41,10 @@ export function HeroSection() {
       {/* Pattern overlay */}
       <div className="hero-overlay" aria-hidden="true" />
 
-      {/* Decorative blobs */}
+      {/* Decorative blobs - hidden on mobile to prevent WebKit horizontal overflow */}
       <div
         aria-hidden="true"
+        className="hidden sm:block pointer-events-none"
         style={{
           position: 'absolute',
           top: '-10%',
@@ -53,11 +54,11 @@ export function HeroSection() {
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(86,131,77,0.25) 0%, transparent 70%)',
           filter: 'blur(60px)',
-          pointerEvents: 'none',
         }}
       />
       <div
         aria-hidden="true"
+        className="hidden sm:block pointer-events-none"
         style={{
           position: 'absolute',
           bottom: '-10%',
@@ -67,12 +68,11 @@ export function HeroSection() {
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(138,98,70,0.2) 0%, transparent 70%)',
           filter: 'blur(60px)',
-          pointerEvents: 'none',
         }}
       />
 
-      <div className="container relative" style={{ zIndex: 2, padding: '4rem 1.5rem' }}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="container relative z-10 py-10 sm:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Text content */}
           <motion.div
             variants={stagger}
@@ -81,9 +81,9 @@ export function HeroSection() {
             className="text-center lg:text-left"
           >
             {/* Tag */}
-            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 mb-6">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 mb-4 sm:mb-6">
               <span
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold"
+                className="flex items-center gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold"
                 style={{
                   background: 'rgba(255,255,255,0.12)',
                   color: 'rgba(255,255,255,0.9)',
@@ -99,10 +99,10 @@ export function HeroSection() {
             {/* Headline */}
             <motion.h1
               variants={fadeUp}
-              className="mb-6"
+              className="mb-4 sm:mb-6"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2.25rem, 5vw, 3.75rem)',
+                fontSize: 'clamp(1.75rem, 4.5vw, 3.5rem)',
                 fontWeight: 700,
                 color: 'white',
                 lineHeight: 1.15,
@@ -117,12 +117,12 @@ export function HeroSection() {
             <motion.p
               variants={fadeUp}
               style={{
-                fontSize: 'clamp(1rem, 2vw, 1.175rem)',
+                fontSize: 'clamp(0.9375rem, 1.8vw, 1.125rem)',
                 color: 'rgba(255,255,255,0.85)',
-                marginBottom: '2.5rem',
+                marginBottom: '2rem',
                 maxWidth: '540px',
-                margin: '0 auto 2.5rem',
-                lineHeight: 1.7,
+                margin: '0 auto 2rem',
+                lineHeight: 1.65,
               }}
               className="lg:mx-0"
             >
@@ -198,7 +198,8 @@ export function HeroSection() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '1rem',
-                padding: '2rem',
+                padding: '1.25rem',
+                maxWidth: '100%',
               }}
             >
               {/* Placeholder for product hero image */}
