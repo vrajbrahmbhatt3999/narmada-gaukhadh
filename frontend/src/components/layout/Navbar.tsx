@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { ShoppingCart, Menu, X, Leaf } from 'lucide-react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
+import { ShoppingCart, Menu, X, Leaf, Calculator, Globe } from 'lucide-react'
 import { useCart } from '@/features/cart/CartContext'
+import { useLanguage } from '@/features/i18n/LanguageContext'
 import { SITE_CONFIG } from '@/config/products'
-
-const NAV_LINKS = [
-  { to: '/', label: 'Home' },
-  { to: '/shop', label: 'Shop' },
-  { to: '/about', label: 'About Us' },
-  { to: '/contact', label: 'Contact' },
-]
 
 export function Navbar() {
   const { itemCount } = useCart()
+  const { language, setLanguage, t, isGujarati } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const location = useLocation()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -28,6 +24,29 @@ export function Navbar() {
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
   }, [])
+
+  const navLinks = [
+    { to: '/', label: t.navHome },
+    { to: '/shop', label: t.navShop },
+    { to: '/#calculator', label: t.navCalculator, isAnchor: true },
+    { to: '/about', label: t.navAbout },
+    { to: '/contact', label: t.navContact },
+  ]
+
+  const handleAnchorClick = (e: React.MouseEvent, to: string) => {
+    if (to.includes('#calculator')) {
+      e.preventDefault()
+      if (location.pathname !== '/') {
+        window.location.href = '/#calculator'
+      } else {
+        const el = document.getElementById('calculator')
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+      setIsOpen(false)
+    }
+  }
 
   return (
     <>
@@ -54,42 +73,102 @@ export function Navbar() {
               >
                 <Leaf size={18} color="white" />
               </div>
-              <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.125rem', color: 'var(--color-forest)' }}>
-                Narmada Gaukhadh
-              </span>
+              <div className="flex flex-col">
+                <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', color: 'var(--color-forest)', lineHeight: 1.1 }}>
+                  {isGujarati ? SITE_CONFIG.brandNameGujarati : SITE_CONFIG.brandName}
+                </span>
+                <span className="text-[10px] text-stone-500 tracking-wider">
+                  {isGujarati ? 'પ્રાકૃતિક કૃષિ ઉત્પાદનો' : 'Pure Soil · Pure Crops'}
+                </span>
+              </div>
             </Link>
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-1">
-              {NAV_LINKS.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  end={link.to === '/'}
-                  className={({ isActive }) =>
-                    `px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                      isActive
-                        ? 'bg-forest/10 text-forest font-semibold'
-                        : 'text-dark/70 hover:text-forest hover:bg-forest/5'
-                    }`
-                  }
-                  style={{ color: 'inherit' }}
-                >
-                  {link.label}
-                </NavLink>
+              {navLinks.map((link) => (
+                link.isAnchor ? (
+                  <a
+                    key={link.to}
+                    href={link.to}
+                    onClick={(e) => handleAnchorClick(e, link.to)}
+                    className="px-3.5 py-2 rounded-full text-sm font-medium transition-all text-dark/75 hover:text-forest hover:bg-forest/5 flex items-center gap-1.5"
+                  >
+                    <Calculator size={14} className="text-emerald-700" />
+                    <span>{link.label}</span>
+                  </a>
+                ) : (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    end={link.to === '/'}
+                    className={({ isActive }) =>
+                      `px-3.5 py-2 rounded-full text-sm font-medium transition-all ${
+                        isActive
+                          ? 'bg-forest/10 text-forest font-semibold'
+                          : 'text-dark/75 hover:text-forest hover:bg-forest/5'
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                )
               ))}
             </div>
 
             {/* Right actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Language Switcher Pill */}
+              <div
+                className="flex items-center p-0.5 rounded-full border"
+                style={{
+                  background: 'rgba(33,78,52,0.06)',
+                  borderColor: 'rgba(33,78,52,0.15)',
+                }}
+                title="Change Language"
+              >
+                <button
+                  type="button"
+                  onClick={() => setLanguage('en')}
+                  className={`px-2 py-1 rounded-full text-xs font-bold transition-all ${
+                    language === 'en'
+                      ? 'bg-forest text-white shadow-xs'
+                      : 'text-stone-600 hover:text-forest'
+                  }`}
+                  style={{
+                    backgroundColor: language === 'en' ? 'var(--color-forest)' : 'transparent',
+                    color: language === 'en' ? 'white' : 'inherit',
+                  }}
+                  aria-label="Switch to English"
+                >
+                  EN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage('gu')}
+                  className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
+                    language === 'gu'
+                      ? 'bg-forest text-white shadow-xs'
+                      : 'text-stone-600 hover:text-forest'
+                  }`}
+                  style={{
+                    backgroundColor: language === 'gu' ? 'var(--color-forest)' : 'transparent',
+                    color: language === 'gu' ? 'white' : 'inherit',
+                  }}
+                  aria-label="Switch to Gujarati"
+                >
+                  ગુજરાતી
+                </button>
+              </div>
+
               <Link
                 to="/shop"
-                className="btn btn-primary btn-sm hidden md:inline-flex"
+                className="btn btn-primary btn-sm hidden lg:inline-flex"
                 aria-label="Order Now"
               >
-                Order Now
+                {t.navShop}
               </Link>
 
+              {/* Cart Button */}
               <Link
                 to="/cart"
                 className="btn btn-icon relative"
@@ -151,9 +230,12 @@ export function Navbar() {
         aria-label="Mobile navigation"
       >
         <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-forest)' }}>
-            Menu
-          </span>
+          <div className="flex items-center gap-2">
+            <Globe size={16} className="text-forest" />
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--color-forest)' }}>
+              {isGujarati ? 'મેનુ' : 'Menu'}
+            </span>
+          </div>
           <button
             className="btn btn-icon"
             onClick={() => setIsOpen(false)}
@@ -164,47 +246,80 @@ export function Navbar() {
           </button>
         </div>
 
-        <nav className="flex-1 p-4 flex flex-col gap-1">
-          {NAV_LINKS.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === '/'}
-              className={({ isActive }) =>
-                `flex items-center px-4 py-3 rounded-xl text-base font-medium transition-all ${
-                  isActive
-                    ? 'font-semibold'
-                    : 'text-dark/70'
-                }`
-              }
-              style={({ isActive }) => ({
-                background: isActive ? 'rgba(33,78,52,0.08)' : 'transparent',
-                color: isActive ? 'var(--color-forest)' : undefined,
-              })}
-              onClick={() => setIsOpen(false)}
+        {/* Mobile Language Switcher */}
+        <div className="p-4 border-b border-stone-200">
+          <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider block mb-2">
+            {isGujarati ? 'ભાષા પસંદ કરો / Language' : 'Select Language'}
+          </span>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setLanguage('en')}
+              className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all ${
+                language === 'en'
+                  ? 'bg-forest text-white border-forest'
+                  : 'bg-white text-stone-700 border-stone-200'
+              }`}
             >
-              {link.label}
-            </NavLink>
+              English
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage('gu')}
+              className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all ${
+                language === 'gu'
+                  ? 'bg-forest text-white border-forest'
+                  : 'bg-white text-stone-700 border-stone-200'
+              }`}
+            >
+              ગુજરાતી
+            </button>
+          </div>
+        </div>
+
+        <nav className="flex-1 p-4 flex flex-col gap-1 overflow-y-auto">
+          {navLinks.map((link) => (
+            link.isAnchor ? (
+              <a
+                key={link.to}
+                href={link.to}
+                onClick={(e) => handleAnchorClick(e, link.to)}
+                className="flex items-center gap-2 px-4 py-3 rounded-xl text-base font-medium text-dark/75 hover:bg-forest/5"
+              >
+                <Calculator size={18} className="text-emerald-700" />
+                <span>{link.label}</span>
+              </a>
+            ) : (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === '/'}
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-3 rounded-xl text-base font-medium transition-all ${
+                    isActive
+                      ? 'font-semibold'
+                      : 'text-dark/70'
+                  }`
+                }
+                style={({ isActive }) => ({
+                  background: isActive ? 'rgba(33,78,52,0.08)' : 'transparent',
+                  color: isActive ? 'var(--color-forest)' : undefined,
+                })}
+                onClick={() => setIsOpen(false)}
+              >
+                {link.label}
+              </NavLink>
+            )
           ))}
         </nav>
 
         <div className="p-4 border-t flex flex-col gap-2" style={{ borderColor: 'var(--color-border)' }}>
-          {SITE_CONFIG.whatsappNumber && (
-            <a
-              href={`https://wa.me/${SITE_CONFIG.whatsappNumber}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp w-full"
-            >
-              Order on WhatsApp
-            </a>
-          )}
           <Link
             to="/shop"
             className="btn btn-primary w-full"
             onClick={() => setIsOpen(false)}
           >
-            Shop Now
+            {t.navShop}
           </Link>
         </div>
       </div>

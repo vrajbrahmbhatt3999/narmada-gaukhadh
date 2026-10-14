@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion, type Variants } from 'framer-motion'
-import { ArrowRight, MessageCircle, Leaf, Sprout, Droplets } from 'lucide-react'
+import { ArrowRight, MessageCircle, Leaf, Sprout, Droplets, Calculator } from 'lucide-react'
+import { useLanguage } from '@/features/i18n/LanguageContext'
 import { SITE_CONFIG } from '@/config/products'
 import { buildWhatsAppOrderUrl } from '@/lib/whatsapp'
 
@@ -15,6 +16,8 @@ const stagger: Variants = {
 }
 
 export function HeroSection() {
+  const { t } = useLanguage()
+
   const whatsappUrl = buildWhatsAppOrderUrl([
     {
       productName: 'Product Enquiry',
@@ -24,6 +27,14 @@ export function HeroSection() {
       totalPrice: 0,
     },
   ])
+
+  const scrollToCalculator = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const el = document.getElementById('calculator')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   return (
     <section className="hero" aria-label="Hero section">
@@ -72,7 +83,7 @@ export function HeroSection() {
             {/* Tag */}
             <motion.div variants={fadeUp} className="inline-flex items-center gap-2 mb-6">
               <span
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold"
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold"
                 style={{
                   background: 'rgba(255,255,255,0.12)',
                   color: 'rgba(255,255,255,0.9)',
@@ -80,8 +91,8 @@ export function HeroSection() {
                   border: '1px solid rgba(255,255,255,0.2)',
                 }}
               >
-                <Leaf size={14} />
-                Natural Farming · Traditional Wisdom
+                <Leaf size={14} className="text-emerald-300" />
+                {t.heroBadge}
               </span>
             </motion.div>
 
@@ -97,9 +108,9 @@ export function HeroSection() {
                 lineHeight: 1.15,
               }}
             >
-              Nurture Your Soil.
+              {t.heroTitle1}
               <br />
-              <span style={{ color: '#A8D5A2' }}>Grow Naturally.</span>
+              <span style={{ color: '#A8D5A2' }}>{t.heroTitle2}</span>
             </motion.h1>
 
             {/* Subtitle */}
@@ -107,15 +118,15 @@ export function HeroSection() {
               variants={fadeUp}
               style={{
                 fontSize: 'clamp(1rem, 2vw, 1.175rem)',
-                color: 'rgba(255,255,255,0.75)',
+                color: 'rgba(255,255,255,0.85)',
                 marginBottom: '2.5rem',
-                maxWidth: '520px',
+                maxWidth: '540px',
                 margin: '0 auto 2.5rem',
                 lineHeight: 1.7,
               }}
               className="lg:mx-0"
             >
-              {SITE_CONFIG.description} Premium vermicompost and natural liquid products for healthier crops and sustainable farms.
+              {t.heroTagline}
             </motion.p>
 
             {/* CTAs */}
@@ -124,39 +135,24 @@ export function HeroSection() {
               className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3"
             >
               <Link to="/shop" className="btn btn-cream btn-lg w-full sm:w-auto">
-                Explore Products
+                {t.heroCtaShop}
                 <ArrowRight size={18} />
               </Link>
 
-              {SITE_CONFIG.whatsappNumber ? (
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-lg w-full sm:w-auto"
-                  style={{
-                    background: 'rgba(255,255,255,0.1)',
-                    color: 'white',
-                    border: '1.5px solid rgba(255,255,255,0.3)',
-                    backdropFilter: 'blur(8px)',
-                  }}
-                >
-                  <MessageCircle size={18} />
-                  Order on WhatsApp
-                </a>
-              ) : (
-                <Link
-                  to="/contact"
-                  className="btn btn-lg w-full sm:w-auto"
-                  style={{
-                    background: 'rgba(255,255,255,0.1)',
-                    color: 'white',
-                    border: '1.5px solid rgba(255,255,255,0.3)',
-                  }}
-                >
-                  Contact Us
-                </Link>
-              )}
+              <a
+                href="#calculator"
+                onClick={scrollToCalculator}
+                className="btn btn-lg w-full sm:w-auto flex items-center justify-center gap-2"
+                style={{
+                  background: 'rgba(255,255,255,0.15)',
+                  color: 'white',
+                  border: '1.5px solid rgba(255,255,255,0.35)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <Calculator size={18} className="text-emerald-300" />
+                {t.heroCtaCalc}
+              </a>
             </motion.div>
 
             {/* Trust signals */}
@@ -165,13 +161,18 @@ export function HeroSection() {
               className="flex flex-wrap items-center justify-center lg:justify-start gap-6 mt-10"
             >
               {[
-                { icon: Leaf, label: 'Natural Inputs' },
-                { icon: Sprout, label: 'Organic Process' },
-                { icon: Droplets, label: 'Panchagavya Based' },
-              ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                  <Icon size={16} />
-                  <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>{label}</span>
+                { icon: Leaf, label: t.heroBadgePurity, sub: t.heroBadgePuritySub },
+                { icon: Sprout, label: t.heroBadgeFarmers, sub: t.heroBadgeFarmersSub },
+                { icon: Droplets, label: t.heroBadgeCertified, sub: t.heroBadgeCertifiedSub },
+              ].map(({ icon: Icon, label, sub }) => (
+                <div key={label} className="flex items-center gap-2.5 text-left" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <Icon size={16} className="text-emerald-300" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{label}</span>
+                    <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}>{sub}</span>
+                  </div>
                 </div>
               ))}
             </motion.div>

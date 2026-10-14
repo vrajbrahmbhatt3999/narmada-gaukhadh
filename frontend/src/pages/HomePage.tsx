@@ -1,5 +1,6 @@
 import { HeroSection } from '@/components/sections/HeroSection'
 import { ProductShowcase } from '@/components/sections/ProductShowcase'
+import { DosageCalculatorSection } from '@/components/sections/DosageCalculatorSection'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { MissionSection } from '@/components/sections/MissionSection'
 import { PackSelectorSection } from '@/components/sections/PackSelectorSection'
@@ -11,6 +12,7 @@ export function HomePage() {
     <>
       <HeroSection />
       <ProductShowcase />
+      <DosageCalculatorSection />
       <ProcessSection />
       <MissionSection />
       <PackSelectorSection />

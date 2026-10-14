@@ -3,6 +3,7 @@ import { motion, type Variants } from 'framer-motion'
 import { ArrowRight, ShoppingCart, MessageCircle } from 'lucide-react'
 import { PRODUCTS, formatPrice } from '@/config/products'
 import { useCart } from '@/features/cart/CartContext'
+import { useLanguage } from '@/features/i18n/LanguageContext'
 import { buildWhatsAppOrderUrl, openWhatsApp } from '@/lib/whatsapp'
 
 const fadeUp: Variants = {
@@ -12,6 +13,7 @@ const fadeUp: Variants = {
 
 function ProductCard({ product, index }: { product: (typeof PRODUCTS)[0]; index: number }) {
   const { addItem } = useCart()
+  const { t, isGujarati } = useLanguage()
   const defaultVariant = product.variants[0]
 
   const handleAddToCart = () => {
@@ -94,11 +96,11 @@ function ProductCard({ product, index }: { product: (typeof PRODUCTS)[0]; index:
             marginBottom: '0.25rem',
           }}
         >
-          {product.nameGujarati}
+          {isGujarati ? product.name : product.nameGujarati}
         </p>
 
         <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-          {product.name}
+          {isGujarati ? product.nameGujarati : product.name}
         </h3>
 
         <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)', marginBottom: '1rem', lineHeight: 1.6 }}>
@@ -120,7 +122,7 @@ function ProductCard({ product, index }: { product: (typeof PRODUCTS)[0]; index:
             {formatPrice(defaultVariant.priceInr)}
           </span>
           <span style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>
-            starting / {defaultVariant.label}
+            {t.priceFrom} / {defaultVariant.label}
           </span>
         </div>
 
@@ -132,7 +134,7 @@ function ProductCard({ product, index }: { product: (typeof PRODUCTS)[0]; index:
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-2">
           <Link to={`/products/${product.slug}`} className="btn btn-primary flex-1">
-            View Product
+            {t.viewDetails}
             <ArrowRight size={16} />
           </Link>
           <button
@@ -159,6 +161,8 @@ function ProductCard({ product, index }: { product: (typeof PRODUCTS)[0]; index:
 }
 
 export function ProductShowcase() {
+  const { t } = useLanguage()
+
   return (
     <section className="section" id="products" aria-label="Products showcase">
       <div className="container">
@@ -166,11 +170,11 @@ export function ProductShowcase() {
         <div className="text-center mb-12">
           <p className="section-tag">
             <span style={{ display: 'inline-block', width: '1.5rem', height: '2px', background: 'var(--color-leaf)', borderRadius: '2px' }} />
-            Our Products
+            {t.productShowcaseTag}
           </p>
-          <h2 className="section-title">Natural Products for Sustainable Farming</h2>
+          <h2 className="section-title">{t.productShowcaseTitle}</h2>
           <p className="section-subtitle mx-auto">
-            Carefully made with traditional inputs to support healthier soil and stronger crops.
+            {t.productShowcaseSubtitle}
           </p>
         </div>
 
@@ -188,7 +192,7 @@ export function ProductShowcase() {
 
         <div className="text-center mt-10">
           <Link to="/shop" className="btn btn-secondary">
-            View All Products
+            {t.navShop}
             <ArrowRight size={16} />
           </Link>
         </div>
