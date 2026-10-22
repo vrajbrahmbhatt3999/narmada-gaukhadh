@@ -561,3 +561,31 @@ img {
 .bg-leaf { background-color: var(--color-leaf); }
 .bg-cream { background-color: var(--color-cream); }
 .bg-cream-dark { background-color: var(--color-cream-dark); }
+
+/* ========================================
+   MARQUEE ANIMATION & MICRO-INTERACTIONS
+   ======================================== */
+@keyframes marqueeScroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 26s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: floatGentle 4s ease-in-out infinite;
+}

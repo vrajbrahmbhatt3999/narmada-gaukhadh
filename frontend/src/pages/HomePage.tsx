@@ -1,5 +1,7 @@
 import { HeroSection } from '@/components/sections/HeroSection'
+import { TrustMarqueeRibbon } from '@/components/sections/TrustMarqueeRibbon'
 import { ProductShowcase } from '@/components/sections/ProductShowcase'
+import { SoilComparisonSection } from '@/components/sections/SoilComparisonSection'
 import { DosageCalculatorSection } from '@/components/sections/DosageCalculatorSection'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { MissionSection } from '@/components/sections/MissionSection'
@@ -11,7 +13,9 @@ export function HomePage() {
   return (
     <>
       <HeroSection />
+      <TrustMarqueeRibbon />
       <ProductShowcase />
+      <SoilComparisonSection />
       <DosageCalculatorSection />
       <ProcessSection />
       <MissionSection />

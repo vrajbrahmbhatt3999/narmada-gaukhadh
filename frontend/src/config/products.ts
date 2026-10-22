@@ -79,7 +79,7 @@ export const PRODUCTS: Product[] = [
     longDescription:
       'Narmada Gaukhadh Vermicompost is produced using a natural composting process that incorporates cow dung and Panchagavya-based ingredients. Designed to enrich soil structure and support sustainable farming practices.\n\n[PLACEHOLDER: Please provide the full production process, certified ingredients, application rates, and any laboratory test results before publishing.]',
     category: 'solid',
-    images: [], // placeholder — add real product images
+    images: ['/assets/images/vermicompost.jpg'],
     variants: [
       { id: 'vc-1kg', label: '1 kg', priceInr: 99, weightOrVolume: '1 kg', sku: 'NG-VC-1KG' },
       { id: 'vc-5kg', label: '5 kg', priceInr: 349, weightOrVolume: '5 kg', sku: 'NG-VC-5KG' },
@@ -119,7 +119,7 @@ export const PRODUCTS: Product[] = [
     longDescription:
       'Vidhyanchal is a liquid-based agricultural product offered by Narmada Gaukhadh.\n\n[PLACEHOLDER: Composition, crop suitability, dosage, application method, benefits, and safety information must all be confirmed and verified by the business before publishing.]',
     category: 'liquid',
-    images: [], // placeholder — add real product images
+    images: ['/assets/images/vidhyanchal.jpg'],
     variants: [
       { id: 'vy-500ml', label: '500 ml', priceInr: 149, weightOrVolume: '500 ml', sku: 'NG-VY-500ML' },
       { id: 'vy-1l', label: '1 litre', priceInr: 249, weightOrVolume: '1 litre', sku: 'NG-VY-1L' },

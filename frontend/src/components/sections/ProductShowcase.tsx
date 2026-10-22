@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, type Variants } from 'framer-motion'
-import { ArrowRight, ShoppingCart, MessageCircle } from 'lucide-react'
+import { ArrowRight, ShoppingCart, MessageCircle, Check, Star, Sparkles } from 'lucide-react'
 import { PRODUCTS, formatPrice } from '@/config/products'
 import { useCart } from '@/features/cart/CartContext'
 import { useLanguage } from '@/features/i18n/LanguageContext'
@@ -14,28 +15,34 @@ const fadeUp: Variants = {
 function ProductCard({ product, index }: { product: (typeof PRODUCTS)[0]; index: number }) {
   const { addItem } = useCart()
   const { t, isGujarati } = useLanguage()
-  const defaultVariant = product.variants[0]
+  const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0].id)
+  const [justAdded, setJustAdded] = useState(false)
+
+  const activeVariant =
+    product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0]
 
   const handleAddToCart = () => {
     addItem({
       productId: product.id,
       productName: product.name,
-      variantId: defaultVariant.id,
-      variantLabel: defaultVariant.label,
-      sku: defaultVariant.sku,
+      variantId: activeVariant.id,
+      variantLabel: activeVariant.label,
+      sku: activeVariant.sku,
       quantity: 1,
-      pricePerUnit: defaultVariant.priceInr,
+      pricePerUnit: activeVariant.priceInr,
     })
+    setJustAdded(true)
+    setTimeout(() => setJustAdded(false), 1600)
   }
 
   const handleWhatsApp = () => {
     const url = buildWhatsAppOrderUrl([
       {
-        productName: product.name,
-        variantLabel: defaultVariant.label,
+        productName: isGujarati ? product.nameGujarati : product.name,
+        variantLabel: activeVariant.label,
         quantity: 1,
-        pricePerUnit: defaultVariant.priceInr,
-        totalPrice: defaultVariant.priceInr,
+        pricePerUnit: activeVariant.priceInr,
+        totalPrice: activeVariant.priceInr,
       },
     ])
     openWhatsApp(url)
@@ -44,136 +51,171 @@ function ProductCard({ product, index }: { product: (typeof PRODUCTS)[0]; index:
   return (
     <motion.div
       variants={fadeUp}
-      className="card group"
-      style={{ overflow: 'visible' }}
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.3 }}
+      className="card group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-white border border-[#214E34]/15 shadow-xl hover:shadow-2xl transition-all"
     >
-      {/* Image placeholder */}
-      <div
-        className="relative overflow-hidden"
-        style={{
-          aspectRatio: '4/3',
-          background: `linear-gradient(135deg, ${
-            product.category === 'solid'
-              ? '#8A6246, #56834D'
-              : '#214E34, #56834D'
-          })`,
-          borderRadius: '1.25rem 1.25rem 0 0',
-        }}
-      >
-        {product.images[0] ? (
+      <div>
+        {/* Image Stage with Photo */}
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100">
           <img
             src={product.images[0]}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             loading="lazy"
           />
-        ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span style={{ fontSize: '3rem', opacity: 0.3 }}>
-              {product.category === 'solid' ? '🌱' : '💧'}
-            </span>
-            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.75rem', marginTop: '0.5rem', fontStyle: 'italic' }}>
-              [Product image placeholder]
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
+
+          {/* Top Category Badge */}
+          <div className="absolute top-3.5 left-3.5 flex items-center gap-1.5">
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider text-white shadow-md backdrop-blur-md"
+              style={{
+                background:
+                  product.category === 'solid'
+                    ? 'rgba(33, 78, 52, 0.88)'
+                    : 'rgba(22, 52, 36, 0.88)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+              }}
+            >
+              <Sparkles size={12} className="text-emerald-300" />
+              {product.category === 'solid'
+                ? isGujarati
+                  ? 'અળસિયું ખાતર (Solid)'
+                  : 'Solid Compost'
+                : isGujarati
+                ? 'બાયો-ટોનિક (Liquid)'
+                : 'Liquid Bio-Fertilizer'}
             </span>
           </div>
-        )}
 
-        {/* Category badge */}
-        <div className="absolute top-3 left-3">
-          <span className="badge badge-forest" style={{ background: 'rgba(255,255,255,0.9)', color: 'var(--color-forest)' }}>
-            {product.category === 'solid' ? 'Solid Fertiliser' : 'Liquid Product'}
-          </span>
+          {/* Star Rating Badge (Top Right) */}
+          <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-amber-300 text-xs font-bold border border-white/20">
+            <Star size={12} className="fill-amber-300" />
+            <span className="text-white text-[11px]">4.9</span>
+          </div>
+
+          {/* Bottom Title on Image */}
+          <div className="absolute bottom-3 left-4 right-4 text-white">
+            <span className="text-[11px] font-semibold text-emerald-300 uppercase tracking-widest block mb-0.5">
+              {isGujarati ? product.name : product.nameGujarati}
+            </span>
+            <h3
+              className="text-lg sm:text-xl font-bold font-serif text-white leading-snug drop-shadow"
+              style={{ fontFamily: isGujarati ? 'var(--font-gujarati)' : 'var(--font-display)' }}
+            >
+              {isGujarati ? product.nameGujarati : product.name}
+            </h3>
+          </div>
+        </div>
+
+        {/* Card Body */}
+        <div className="p-5 sm:p-6 flex flex-col">
+          <p className="text-xs sm:text-sm text-[#5A6B5A] leading-relaxed mb-4">
+            {product.shortDescription}
+          </p>
+
+          {/* Interactive Pack Selector Pills */}
+          <div className="mb-4">
+            <span className="text-[11px] font-bold text-stone-600 uppercase tracking-wider block mb-2">
+              {isGujarati ? 'પેકિંગ પસંદ કરો (Select Pack Size):' : 'Choose Pack Size:'}
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {product.variants.map((v) => {
+                const isSelected = v.id === activeVariant.id
+                return (
+                  <button
+                    key={v.id}
+                    type="button"
+                    onClick={() => setSelectedVariantId(v.id)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
+                      isSelected
+                        ? 'bg-[#214E34] text-white border-[#214E34] shadow-md scale-105'
+                        : 'bg-stone-50 text-stone-700 border-stone-200 hover:border-[#214E34]/40 hover:bg-stone-100'
+                    }`}
+                  >
+                    {v.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Dynamic Live Price Display */}
+          <div className="flex items-baseline gap-2.5 py-2 border-t border-stone-100 mb-4">
+            <span className="text-2xl font-extrabold text-[#214E34]">
+              {formatPrice(activeVariant.priceInr)}
+            </span>
+            <span className="text-xs text-stone-500 font-medium">
+              / {activeVariant.label} {isGujarati ? 'પેક' : 'pack'}
+            </span>
+            <span className="ml-auto text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              {isGujarati ? 'સ્ટોક ઉપલબ્ધ' : 'In Stock'}
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="card-body">
-        {/* Gujarati name */}
-        <p
-          style={{
-            fontFamily: 'var(--font-gujarati)',
-            fontSize: '0.875rem',
-            color: 'var(--color-muted)',
-            marginBottom: '0.25rem',
-          }}
+      {/* Action Footer */}
+      <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-0 flex items-center gap-2">
+        <button
+          onClick={handleAddToCart}
+          className={`btn flex-1 py-3 text-xs uppercase tracking-wider font-bold transition-all shadow-md flex items-center justify-center gap-2 ${
+            justAdded
+              ? 'bg-emerald-600 text-white'
+              : 'bg-[#214E34] text-white hover:bg-[#163424]'
+          }`}
         >
-          {isGujarati ? product.name : product.nameGujarati}
-        </p>
+          {justAdded ? (
+            <>
+              <Check size={16} />
+              <span>{isGujarati ? 'કાર્ટમાં ઉમેરાયું!' : 'Added to Cart!'}</span>
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={16} />
+              <span>{isGujarati ? 'કાર્ટમાં ઉમેરો' : 'Add To Cart'}</span>
+            </>
+          )}
+        </button>
 
-        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-          {isGujarati ? product.nameGujarati : product.name}
-        </h3>
+        <button
+          onClick={handleWhatsApp}
+          className="btn btn-whatsapp p-3 shadow-md hover:scale-105 transition-all text-white bg-[#25D366] hover:bg-[#20ba59]"
+          title="Direct WhatsApp Order"
+          aria-label={`Order ${product.name} on WhatsApp`}
+        >
+          <MessageCircle size={18} />
+        </button>
 
-        <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)', marginBottom: '1rem', lineHeight: 1.6 }}>
-          {product.shortDescription}
-        </p>
-
-        {/* Pack chips */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {product.variants.map((v) => (
-            <span key={v.id} className="pack-option" style={{ padding: '0.25rem 0.625rem', fontSize: '0.8rem' }}>
-              {v.label} — {formatPrice(v.priceInr)}
-            </span>
-          ))}
-        </div>
-
-        {/* Price */}
-        <div className="flex items-baseline gap-2 mb-4">
-          <span className="price-display price-display-sm">
-            {formatPrice(defaultVariant.priceInr)}
-          </span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>
-            {t.priceFrom} / {defaultVariant.label}
-          </span>
-        </div>
-
-        {/* Disclaimer */}
-        <p style={{ fontSize: '0.7rem', color: 'var(--color-muted)', marginBottom: '1rem', fontStyle: 'italic' }}>
-          *Prices are placeholder — confirm before launch
-        </p>
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Link to={`/products/${product.slug}`} className="btn btn-primary flex-1">
-            {t.viewDetails}
-            <ArrowRight size={16} />
-          </Link>
-          <button
-            className="btn btn-icon"
-            style={{ border: '1.5px solid var(--color-border)', background: 'white' }}
-            onClick={handleAddToCart}
-            title="Add default pack to cart"
-            aria-label={`Add ${product.name} to cart`}
-          >
-            <ShoppingCart size={18} style={{ color: 'var(--color-forest)' }} />
-          </button>
-          <button
-            className="btn btn-icon btn-whatsapp"
-            onClick={handleWhatsApp}
-            title="Order on WhatsApp"
-            aria-label={`Order ${product.name} on WhatsApp`}
-          >
-            <MessageCircle size={18} />
-          </button>
-        </div>
+        <Link
+          to={`/products/${product.slug}`}
+          className="p-3 rounded-full border border-stone-300 text-stone-600 hover:border-[#214E34] hover:text-[#214E34] transition-colors"
+          title="Full details"
+        >
+          <ArrowRight size={16} />
+        </Link>
       </div>
     </motion.div>
   )
 }
 
 export function ProductShowcase() {
-  const { t } = useLanguage()
+  const { t, isGujarati } = useLanguage()
 
   return (
-    <section className="section" id="products" aria-label="Products showcase">
+    <section className="section py-20 bg-stone-50/60" id="products" aria-label="Products showcase">
       <div className="container">
         {/* Header */}
-        <div className="text-center mb-12">
-          <p className="section-tag">
-            <span style={{ display: 'inline-block', width: '1.5rem', height: '2px', background: 'var(--color-leaf)', borderRadius: '2px' }} />
-            {t.productShowcaseTag}
-          </p>
-          <h2 className="section-title">{t.productShowcaseTitle}</h2>
-          <p className="section-subtitle mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
+            <span>✦</span>
+            <span>{t.productShowcaseTag}</span>
+          </div>
+          <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 mb-4">
+            {t.productShowcaseTitle}
+          </h2>
+          <p className="section-subtitle mx-auto text-stone-600 leading-relaxed text-sm sm:text-base">
             {t.productShowcaseSubtitle}
           </p>
         </div>
@@ -190,9 +232,12 @@ export function ProductShowcase() {
           ))}
         </motion.div>
 
-        <div className="text-center mt-10">
-          <Link to="/shop" className="btn btn-secondary">
-            {t.navShop}
+        <div className="text-center mt-12">
+          <Link
+            to="/shop"
+            className="btn btn-secondary inline-flex items-center gap-2 font-bold px-7 py-3 text-xs uppercase tracking-wider"
+          >
+            <span>{isGujarati ? 'બધી પ્રોડક્ટ્સ જુઓ' : 'Explore Complete Catalog'}</span>
             <ArrowRight size={16} />
           </Link>
         </div>
