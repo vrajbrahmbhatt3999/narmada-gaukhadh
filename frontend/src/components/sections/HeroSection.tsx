@@ -1,6 +1,7 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, type Variants } from 'framer-motion'
-import { ArrowRight, Leaf, Sprout, Calculator, Star, ShieldCheck, Sparkles } from 'lucide-react'
+import { motion, type Variants, AnimatePresence } from 'framer-motion'
+import { ArrowRight, Leaf, Sprout, Calculator, Star, ShieldCheck, Sparkles, ChevronLeft, ChevronRight, FileText } from 'lucide-react'
 import { useLanguage } from '@/features/i18n/LanguageContext'
 
 const fadeUp: Variants = {
@@ -15,6 +16,49 @@ const stagger: Variants = {
 
 export function HeroSection() {
   const { t, isGujarati } = useLanguage()
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+
+  const bannerSlides = [
+    {
+      id: 'vermicompost',
+      name: isGujarati ? 'નર્મદા ગૌખાધ અળસિયું ખાતર' : 'Narmada Gaukhadh Vermicompost',
+      subtitle: isGujarati
+        ? '૧૦૦% શુદ્ધ દેશી ગાયના છાણ અને પંચગવ્યથી નિર્મિત'
+        : '100% Pure Organic Vermicompost with Panchagavya',
+      image: '/assets/images/products/vermicompost-main.webp',
+      link: '/products/vermicompost',
+      badge: isGujarati ? 'સજીવ પ્રાકૃતિક ખાતર' : '100% Certified Organic',
+    },
+    {
+      id: 'vidhyanchal',
+      name: isGujarati ? 'વિધ્યાંચળ પ્રવાહી વર્મીવોશ' : 'Vidhyanchal Vermiwash',
+      subtitle: isGujarati
+        ? 'પ્રાકૃતિક પ્રવાહી બાયો-ટોનિક • પંચગવ્ય યુક્ત'
+        : 'Natural Liquid Bio-Fertilizer • Enriched with Panchagavya',
+      image: '/assets/images/products/vidhyanchal-main.webp',
+      link: '/products/vidhyanchal',
+      badge: isGujarati ? 'પ્રવાહી બાયો-ટોનિક' : 'Liquid Bio-Fertilizer',
+    },
+    {
+      id: 'pure-organic',
+      name: isGujarati ? '૧૦૦% શુદ્ધ અને પ્રાકૃતિક ગૌ-કૃષિ' : 'Pure & Chemical Free Farming',
+      subtitle: isGujarati
+        ? 'કોઈ કેમિકલ નહીં • કોઈ નીંદણ બિયારણ નહીં'
+        : 'No Additives • No Weed Seeds • Zero Toxic Chemicals',
+      image: '/assets/images/products/vermicompost-pure-organic.webp',
+      link: '/products/vermicompost',
+      badge: isGujarati ? 'શિવાય ડેરી ફાર્મ' : 'Shivmay Dairy Farm',
+    },
+  ]
+
+  useEffect(() => {
+    if (isPaused) return
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % bannerSlides.length)
+    }, 4500)
+    return () => clearInterval(interval)
+  }, [isPaused, bannerSlides.length])
 
   const scrollToCalculator = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -146,6 +190,20 @@ export function HeroSection() {
                 <Calculator size={18} className="text-emerald-300" />
                 <span>{t.heroCtaCalc}</span>
               </a>
+
+              <a
+                href="#brochure"
+                className="btn btn-lg flex items-center justify-center gap-2 hover:bg-white/20 transition-all font-semibold"
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  color: 'white',
+                  border: '1.5px solid rgba(255,255,255,0.22)',
+                  backdropFilter: 'blur(10px)',
+                }}
+              >
+                <FileText size={17} className="text-amber-300" />
+                <span>{isGujarati ? 'સત્તાવાર બ્રોશર' : 'Farm Brochure'}</span>
+              </a>
             </motion.div>
 
             {/* Trust Signal Pills */}
@@ -195,6 +253,8 @@ export function HeroSection() {
             {/* Main Featured Photo Card */}
             <div
               className="relative w-full rounded-3xl overflow-hidden shadow-2xl group"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
               style={{
                 border: '2px solid rgba(255,255,255,0.22)',
                 background: 'linear-gradient(160deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.3) 100%)',
@@ -203,84 +263,144 @@ export function HeroSection() {
               }}
             >
               {/* Product Photography Showcase */}
-              <div className="relative aspect-[4/3] w-full overflow-hidden">
-                <img
-                  src="/assets/images/hero_farm.jpg"
-                  alt="Narmada Gaukhadh Organic Vermicompost and Bio-Fertilizer on Lush Green Farmland"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-900">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={bannerSlides[activeSlide].image}
+                    src={bannerSlides[activeSlide].image}
+                    alt={bannerSlides[activeSlide].name}
+                    initial={{ opacity: 0.6, scale: 1.02 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0.4 }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                  />
+                </AnimatePresence>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
 
-                {/* Live Floating Chip 1 (Top Left) */}
-                <motion.div
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                {/* Live Floating Badge (Top Left) */}
+                <div
                   className="absolute top-3.5 left-3.5 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full shadow-lg"
                   style={{
-                    background: 'rgba(15, 56, 34, 0.85)',
-                    border: '1px solid rgba(168, 213, 162, 0.4)',
+                    background: 'rgba(15, 56, 34, 0.88)',
+                    border: '1px solid rgba(168, 213, 162, 0.45)',
                     backdropFilter: 'blur(8px)',
                   }}
                 >
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
                   <span className="text-[11px] font-bold text-white tracking-wide">
-                    {isGujarati ? 'સજીવ પ્રાકૃતિક ખાતર' : '100% Certified Organic'}
+                    {bannerSlides[activeSlide].badge}
                   </span>
-                </motion.div>
+                </div>
+
+                {/* Left/Right Prev/Next Buttons */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveSlide((prev) =>
+                      prev > 0 ? prev - 1 : bannerSlides.length - 1
+                    )
+                  }
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all opacity-70 group-hover:opacity-100 shadow-md cursor-pointer"
+                  aria-label="Previous slide"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveSlide((prev) =>
+                      (prev + 1) % bannerSlides.length
+                    )
+                  }
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all opacity-70 group-hover:opacity-100 shadow-md cursor-pointer"
+                  aria-label="Next slide"
+                >
+                  <ChevronRight size={20} />
+                </button>
+
+                {/* Dot Indicators */}
+                <div className="absolute top-3.5 right-3.5 z-10 flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15">
+                  {bannerSlides.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setActiveSlide(i)}
+                      aria-label={`Go to slide ${i + 1}`}
+                      className={`h-2 rounded-full transition-all cursor-pointer ${
+                        activeSlide === i ? 'w-5 bg-emerald-400' : 'w-2 bg-white/40 hover:bg-white/70'
+                      }`}
+                    />
+                  ))}
+                </div>
 
                 {/* Photo Caption Overlay at Bottom */}
-                <div className="absolute bottom-3 inset-x-3.5 text-white">
+                <div className="absolute bottom-3 inset-x-3.5 text-white z-10 pointer-events-none">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">
-                    {isGujarati ? 'નર્મદા ગૌખાધ પરિવાર' : 'Direct From Gujarat Farmland'}
+                    {isGujarati ? 'વાસ્તવિક ઉત્પાદન ફોટોગ્રાફી' : 'Actual Product Packaging'}
                   </span>
-                  <p className="font-serif text-sm font-semibold text-white/95 leading-snug">
-                    {isGujarati
-                      ? 'અળસિયું ખાતર અને વિધ્યાંચળ પ્રાકૃતિક ટોનિક'
-                      : 'Vermicompost & Vidhyanchal Liquid Bio-Fertilizer'}
+                  <Link
+                    to={bannerSlides[activeSlide].link}
+                    className="font-serif text-sm sm:text-base font-semibold text-white/95 leading-snug block pointer-events-auto hover:text-emerald-300 transition-colors"
+                  >
+                    {bannerSlides[activeSlide].name}
+                  </Link>
+                  <p className="text-[11px] text-white/80 line-clamp-1">
+                    {bannerSlides[activeSlide].subtitle}
                   </p>
                 </div>
               </div>
 
               {/* Quick Product Switcher Strip */}
-              <div className="p-3.5 grid grid-cols-2 gap-2.5 bg-black/40 backdrop-blur-md border-t border-white/10">
-                <Link
-                  to="/products/vermicompost"
-                  className="flex items-center gap-2.5 p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 group/btn"
+              <div className="p-3 grid grid-cols-2 gap-2 bg-black/50 backdrop-blur-md border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setActiveSlide(0)}
+                  className={`flex items-center gap-2.5 p-2 rounded-xl text-left transition-all border cursor-pointer ${
+                    activeSlide === 0
+                      ? 'bg-emerald-950/60 border-emerald-400/50 shadow-md ring-1 ring-emerald-400/30'
+                      : 'bg-white/10 hover:bg-white/15 border-white/10'
+                  }`}
                 >
                   <img
-                    src="/assets/images/vermicompost.jpg"
+                    src="/assets/images/products/vermicompost-main.webp"
                     alt="Vermicompost"
                     className="w-10 h-10 rounded-lg object-cover border border-white/20 shrink-0"
                   />
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold text-white truncate group-hover/btn:text-emerald-300 transition-colors">
+                    <span className="text-xs font-bold text-white truncate">
                       {isGujarati ? 'અળસિયું ખાતર' : 'Vermicompost'}
                     </span>
-                    <span className="text-[10px] text-white/70">
+                    <span className="text-[10px] text-emerald-300 font-semibold">
                       ₹99 {isGujarati ? 'થી શરૂ' : 'onwards'}
                     </span>
                   </div>
-                </Link>
+                </button>
 
-                <Link
-                  to="/products/vidhyanchal"
-                  className="flex items-center gap-2.5 p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 group/btn"
+                <button
+                  type="button"
+                  onClick={() => setActiveSlide(1)}
+                  className={`flex items-center gap-2.5 p-2 rounded-xl text-left transition-all border cursor-pointer ${
+                    activeSlide === 1
+                      ? 'bg-emerald-950/60 border-emerald-400/50 shadow-md ring-1 ring-emerald-400/30'
+                      : 'bg-white/10 hover:bg-white/15 border-white/10'
+                  }`}
                 >
                   <img
-                    src="/assets/images/vidhyanchal.jpg"
+                    src="/assets/images/products/vidhyanchal-main.webp"
                     alt="Vidhyanchal"
                     className="w-10 h-10 rounded-lg object-cover border border-white/20 shrink-0"
                   />
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold text-white truncate group-hover/btn:text-emerald-300 transition-colors">
+                    <span className="text-xs font-bold text-white truncate">
                       {isGujarati ? 'વિધ્યાંચળ લિક્વિડ' : 'Vidhyanchal'}
                     </span>
-                    <span className="text-[10px] text-white/70">
+                    <span className="text-[10px] text-emerald-300 font-semibold">
                       ₹149 {isGujarati ? 'થી શરૂ' : 'onwards'}
                     </span>
                   </div>
-                </Link>
+                </button>
               </div>
             </div>
 

@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { ShoppingCart, Menu, X, Leaf, Calculator, Globe } from 'lucide-react'
+import { ShoppingCart, Menu, X, Leaf, Calculator, Globe, FileText, Download } from 'lucide-react'
 import { useCart } from '@/features/cart/CartContext'
 import { useLanguage } from '@/features/i18n/LanguageContext'
 import { SITE_CONFIG } from '@/config/products'
+import { BrochureModal } from '@/components/brochure/BrochureModal'
 
 export function Navbar() {
   const { itemCount } = useCart()
   const { language, setLanguage, t, isGujarati } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [brochureModalOpen, setBrochureModalOpen] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
@@ -61,26 +63,18 @@ export function Navbar() {
       >
         <div className="container">
           <nav className="flex items-center justify-between h-16" aria-label="Main navigation">
-            {/* Logo */}
+            {/* Official Brand Logo */}
             <Link
               to="/"
-              className="flex items-center gap-1.5 sm:gap-2 font-bold min-w-0 flex-shrink"
+              className="flex items-center gap-1.5 sm:gap-2 font-bold min-w-0 flex-shrink group py-1"
               aria-label="Narmada Gaukhadh — Home"
             >
-              <div
-                className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full flex-shrink-0"
-                style={{ background: 'var(--color-forest)' }}
-              >
-                <Leaf size={16} color="white" />
-              </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-sm sm:text-base font-bold truncate" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-forest)', lineHeight: 1.1 }}>
-                  {isGujarati ? SITE_CONFIG.brandNameGujarati : SITE_CONFIG.brandName}
-                </span>
-                <span className="text-[9px] sm:text-[10px] text-stone-500 tracking-wider truncate">
-                  {isGujarati ? 'પ્રાકૃતિક કૃષિ ઉત્પાદનો' : 'Pure Soil · Pure Crops'}
-                </span>
-              </div>
+              <img
+                src={SITE_CONFIG.logoUrl}
+                alt={isGujarati ? SITE_CONFIG.brandNameGujarati : SITE_CONFIG.brandName}
+                className="h-10 sm:h-12 w-auto max-h-12 object-contain transition-transform group-hover:scale-102"
+                height={48}
+              />
             </Link>
 
             {/* Desktop Nav */}
@@ -91,7 +85,7 @@ export function Navbar() {
                     key={link.to}
                     href={link.to}
                     onClick={(e) => handleAnchorClick(e, link.to)}
-                    className="px-3.5 py-2 rounded-full text-sm font-medium transition-all text-dark/75 hover:text-forest hover:bg-forest/5 flex items-center gap-1.5"
+                    className="px-3 py-2 rounded-full text-sm font-medium transition-all text-dark/75 hover:text-forest hover:bg-forest/5 flex items-center gap-1.5"
                   >
                     <Calculator size={14} className="text-emerald-700" />
                     <span>{link.label}</span>
@@ -102,7 +96,7 @@ export function Navbar() {
                     to={link.to}
                     end={link.to === '/'}
                     className={({ isActive }) =>
-                      `px-3.5 py-2 rounded-full text-sm font-medium transition-all ${
+                      `px-3 py-2 rounded-full text-sm font-medium transition-all ${
                         isActive
                           ? 'bg-forest/10 text-forest font-semibold'
                           : 'text-dark/75 hover:text-forest hover:bg-forest/5'
@@ -113,6 +107,17 @@ export function Navbar() {
                   </NavLink>
                 )
               ))}
+
+              {/* Brochure Quick Button in Nav */}
+              <button
+                type="button"
+                onClick={() => setBrochureModalOpen(true)}
+                className="px-3 py-1.5 rounded-full text-sm font-semibold transition-all flex items-center gap-1.5 bg-forest/5 hover:bg-forest/10 text-forest border border-forest/20"
+                title={t.viewBrochure}
+              >
+                <FileText size={14} className="text-emerald-700" />
+                <span>{t.navBrochure}</span>
+              </button>
             </div>
 
             {/* Right actions */}
@@ -311,9 +316,36 @@ export function Navbar() {
               </NavLink>
             )
           ))}
+
+          {/* Mobile Brochure Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsOpen(false)
+              setBrochureModalOpen(true)
+            }}
+            className="flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium text-forest bg-forest/5 hover:bg-forest/10 border border-forest/15 transition-all text-left"
+          >
+            <div className="flex items-center gap-2.5">
+              <FileText size={18} className="text-emerald-700" />
+              <span>{t.navBrochure}</span>
+            </div>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-forest text-white">
+              PDF
+            </span>
+          </button>
         </nav>
 
         <div className="p-4 border-t flex flex-col gap-2" style={{ borderColor: 'var(--color-border)' }}>
+          <a
+            href={SITE_CONFIG.brochurePdf}
+            download={SITE_CONFIG.brochureDirectName}
+            className="btn btn-outline w-full flex items-center justify-center gap-2 text-xs font-semibold"
+          >
+            <Download size={14} />
+            <span>{t.downloadBrochure}</span>
+          </a>
+
           <Link
             to="/shop"
             className="btn btn-primary w-full"
@@ -323,6 +355,12 @@ export function Navbar() {
           </Link>
         </div>
       </div>
+
+      {/* Brochure Viewer Modal */}
+      <BrochureModal
+        isOpen={brochureModalOpen}
+        onClose={() => setBrochureModalOpen(false)}
+      />
     </>
   )
 }

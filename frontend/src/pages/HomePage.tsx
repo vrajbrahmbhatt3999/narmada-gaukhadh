@@ -4,6 +4,7 @@ import { ProductShowcase } from '@/components/sections/ProductShowcase'
 import { SoilComparisonSection } from '@/components/sections/SoilComparisonSection'
 import { DosageCalculatorSection } from '@/components/sections/DosageCalculatorSection'
 import { ProcessSection } from '@/components/sections/ProcessSection'
+import { BrochureSection } from '@/components/sections/BrochureSection'
 import { MissionSection } from '@/components/sections/MissionSection'
 import { PackSelectorSection } from '@/components/sections/PackSelectorSection'
 import { FaqSection } from '@/components/sections/FaqSection'
@@ -18,6 +19,7 @@ export function HomePage() {
       <SoilComparisonSection />
       <DosageCalculatorSection />
       <ProcessSection />
+      <BrochureSection />
       <MissionSection />
       <PackSelectorSection />
       <FaqSection />

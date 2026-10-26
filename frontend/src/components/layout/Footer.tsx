@@ -12,6 +12,7 @@ const footerLinks = {
     { to: '/about', label: 'About Us' },
     { to: '/contact', label: 'Contact' },
     { to: '/contact#bulk', label: 'Bulk Enquiry' },
+    { to: '/NG-Brochure-Gujarati.pdf', label: '📄 Official Brochure (PDF)', isDownload: true },
   ],
   policies: [
     { to: '/policies/privacy', label: 'Privacy Policy' },
@@ -28,19 +29,16 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div
-                className="flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0"
-                style={{ background: 'var(--color-leaf)' }}
-              >
-                <Leaf size={18} color="white" />
-              </div>
-              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.125rem', color: 'white' }}>
-                Narmada Gaukhadh
-              </span>
+            <Link to="/" className="inline-block mb-4 group" aria-label="Narmada Gaukhadh Home">
+              <img
+                src={SITE_CONFIG.logoUrl}
+                alt="Narmada Gaukhadh Vermicompost"
+                className="h-12 sm:h-14 w-auto object-contain filter drop-shadow-md transition-transform group-hover:scale-102"
+                height={56}
+              />
             </Link>
-            <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '280px' }}>
-              Natural agricultural products rooted in traditional Panchagavya farming practices. Supporting sustainable agriculture across India.
+            <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '300px' }}>
+              Natural agricultural products rooted in traditional Panchagavya farming practices. Supporting sustainable organic agriculture across Gujarat & India.
             </p>
 
             {/* Contact */}
@@ -49,10 +47,13 @@ export function Footer() {
                 <a
                   href={`tel:${SITE_CONFIG.phone}`}
                   className="flex items-center gap-2 text-sm hover:text-white transition-colors"
-                  style={{ color: 'rgba(255,255,255,0.6)' }}
+                  style={{ color: 'rgba(255,255,255,0.7)' }}
                 >
                   <Phone size={14} />
-                  {SITE_CONFIG.phone}
+                  <span>{SITE_CONFIG.phone}</span>
+                  {SITE_CONFIG.secondaryPhone && (
+                    <span className="text-white/40">| {SITE_CONFIG.secondaryPhone}</span>
+                  )}
                 </a>
               )}
               {SITE_CONFIG.email && (
@@ -137,13 +138,26 @@ export function Footer() {
             <ul className="flex flex-col gap-2">
               {footerLinks.company.map((l) => (
                 <li key={l.to}>
-                  <Link
-                    to={l.to}
-                    className="text-sm transition-colors hover:text-white"
-                    style={{ color: 'rgba(255,255,255,0.6)' }}
-                  >
-                    {l.label}
-                  </Link>
+                  {'isDownload' in l && l.isDownload ? (
+                    <a
+                      href={l.to}
+                      download="Narmada-Gaukhadh-Gujarati-Brochure.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm transition-colors hover:text-white flex items-center gap-1.5"
+                      style={{ color: 'rgba(255,255,255,0.75)' }}
+                    >
+                      {l.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={l.to}
+                      className="text-sm transition-colors hover:text-white"
+                      style={{ color: 'rgba(255,255,255,0.6)' }}
+                    >
+                      {l.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

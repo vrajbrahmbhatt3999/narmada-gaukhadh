@@ -10,6 +10,9 @@ export interface Translations {
   navAbout: string
   navContact: string
   navCart: string
+  navBrochure: string
+  downloadBrochure: string
+  viewBrochure: string
   orderOnWhatsApp: string
   announcement: string
 
@@ -90,6 +93,9 @@ const translations: Record<Language, Translations> = {
     navAbout: 'About Us',
     navContact: 'Contact',
     navCart: 'Cart',
+    navBrochure: 'Brochure',
+    downloadBrochure: 'Download Brochure (PDF)',
+    viewBrochure: 'View Gujarati Brochure',
     orderOnWhatsApp: 'Order via WhatsApp',
     announcement: '🌿 100% Cow-Based Natural Agricultural Products — Delivered Across India',
 
@@ -172,6 +178,9 @@ const translations: Record<Language, Translations> = {
     navAbout: 'અમારા વિશે',
     navContact: 'સંપર્ક',
     navCart: 'કાર્ટ',
+    navBrochure: 'બ્રોશર',
+    downloadBrochure: 'ગુજરાતી બ્રોશર ડાઉનલોડ કરો (PDF)',
+    viewBrochure: 'ગુજરાતી બ્રોશર જુઓ',
     orderOnWhatsApp: 'વોટ્સએપ પર ઓર્ડર કરો',
     announcement: '🌿 ૧૦૦% ગૌ-આધારિત પ્રાકૃતિક કૃષિ ઉત્પાદનો — સમગ્ર ભારતમાં ડિલિવરી',
 

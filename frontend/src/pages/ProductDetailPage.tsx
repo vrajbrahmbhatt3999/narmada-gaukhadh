@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { ShoppingCart, MessageCircle, ArrowLeft, ChevronDown } from 'lucide-react'
+import { ShoppingCart, MessageCircle, ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, FileText, Download } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PRODUCTS, getProductBySlug, formatPrice } from '@/config/products'
+import { PRODUCTS, getProductBySlug, formatPrice, SITE_CONFIG } from '@/config/products'
 import { useCart } from '@/features/cart/CartContext'
 import { buildWhatsAppOrderUrl, openWhatsApp } from '@/lib/whatsapp'
 
@@ -11,12 +11,20 @@ export function ProductDetailPage() {
   const product = slug ? getProductBySlug(slug) : undefined
 
   const { addItem } = useCart()
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [selectedVariantId, setSelectedVariantId] = useState<string>(
     product?.variants[0]?.id ?? ''
   )
   const [quantity, setQuantity] = useState(1)
   const [addedFeedback, setAddedFeedback] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+
+  useEffect(() => {
+    setActiveImageIndex(0)
+    if (product) {
+      setSelectedVariantId(product.variants[0]?.id ?? '')
+    }
+  }, [slug])
 
   if (!product) {
     return <Navigate to="/shop" replace />
@@ -73,35 +81,102 @@ export function ProductDetailPage() {
       <div className="section-sm">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            {/* Image */}
-            <div
-              style={{
-                aspectRatio: '1',
-                borderRadius: '1.5rem',
-                background: `linear-gradient(135deg, ${product.category === 'solid' ? '#8A6246, #56834D' : '#214E34, #56834D'})`,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              {product.images[0] ? (
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <>
-                  <span style={{ fontSize: '5rem', opacity: 0.25 }}>
-                    {product.category === 'solid' ? '🌱' : '💧'}
-                  </span>
-                  <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', fontStyle: 'italic', marginTop: '1rem', textAlign: 'center', padding: '0 2rem' }}>
-                    [Product photography placeholder]<br />Replace with actual product images before launch
-                  </p>
-                </>
+            {/* Image Gallery */}
+            <div className="flex flex-col gap-4">
+              <div
+                style={{
+                  aspectRatio: '1',
+                  borderRadius: '1.5rem',
+                  background: `linear-gradient(135deg, ${product.category === 'solid' ? '#8A6246, #56834D' : '#214E34, #56834D'})`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+                className="shadow-xl border border-stone-200/50 group"
+              >
+                {product.images && product.images.length > 0 ? (
+                  <motion.img
+                    key={product.images[activeImageIndex] || product.images[0]}
+                    initial={{ opacity: 0.7, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.25 }}
+                    src={product.images[activeImageIndex] || product.images[0]}
+                    alt={`${product.name} - View ${activeImageIndex + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <>
+                    <span style={{ fontSize: '5rem', opacity: 0.25 }}>
+                      {product.category === 'solid' ? '🌱' : '💧'}
+                    </span>
+                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', fontStyle: 'italic', marginTop: '1rem', textAlign: 'center', padding: '0 2rem' }}>
+                      [Product photography placeholder]
+                    </p>
+                  </>
+                )}
+
+                {/* Left/Right Prev/Next Buttons */}
+                {product.images && product.images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setActiveImageIndex((prev) =>
+                          prev > 0 ? prev - 1 : product.images.length - 1
+                        )
+                      }
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-lg opacity-85 group-hover:opacity-100"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft size={22} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setActiveImageIndex((prev) =>
+                          prev < product.images.length - 1 ? prev + 1 : 0
+                        )
+                      }
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-lg opacity-85 group-hover:opacity-100"
+                      aria-label="Next image"
+                    >
+                      <ChevronRight size={22} />
+                    </button>
+
+                    {/* Image Counter Pill */}
+                    <span className="absolute bottom-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-black/60 text-white backdrop-blur-md shadow-md">
+                      {activeImageIndex + 1} / {product.images.length}
+                    </span>
+                  </>
+                )}
+              </div>
+
+              {/* Thumbnail Strip */}
+              {product.images && product.images.length > 1 && (
+                <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-thin">
+                  {product.images.map((imgUrl, idx) => (
+                    <button
+                      type="button"
+                      key={idx}
+                      onClick={() => setActiveImageIndex(idx)}
+                      aria-label={`View image ${idx + 1}`}
+                      className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                        activeImageIndex === idx
+                          ? 'border-emerald-600 ring-2 ring-emerald-500/30 scale-105'
+                          : 'border-stone-200 opacity-60 hover:opacity-100 hover:border-emerald-300'
+                      }`}
+                    >
+                      <img
+                        src={imgUrl}
+                        alt={`Thumbnail ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
 
@@ -196,13 +271,48 @@ export function ProductDetailPage() {
                 View Cart & Checkout
               </Link>
 
+              {/* Official Brochure Download Banner */}
+              <div className="mt-4 p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 flex items-center justify-between gap-3 shadow-xs">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-800 flex items-center justify-center flex-shrink-0">
+                    <FileText size={17} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-amber-950 truncate">
+                      સત્તાવાર ગુજરાતી બ્રોશર & AAU લેબ રિપોર્ટ
+                    </p>
+                    <p className="text-[11px] text-amber-800/80 truncate">
+                      Official 4-Page Farm Manual (19 MB PDF)
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={SITE_CONFIG.brochurePdf}
+                  download={SITE_CONFIG.brochureDirectName}
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white flex items-center gap-1.5 flex-shrink-0 shadow-xs transition-colors"
+                  title="Download Gujarati Brochure PDF"
+                >
+                  <Download size={13} />
+                  <span>PDF</span>
+                </a>
+              </div>
+
               {/* Usage note */}
               {product.usageNote && (
                 <div
-                  className="mt-5 p-4 rounded-xl text-sm"
-                  style={{ background: 'rgba(33,78,52,0.06)', border: '1px solid rgba(33,78,52,0.15)', color: 'var(--color-forest)', fontStyle: 'italic' }}
+                  className="mt-6 p-4 rounded-2xl text-sm"
+                  style={{
+                    background: 'rgba(33,78,52,0.05)',
+                    border: '1px solid rgba(33,78,52,0.15)',
+                    color: 'var(--color-forest)',
+                  }}
                 >
-                  ⚠️ {product.usageNote}
+                  <strong className="block font-semibold mb-2 text-emerald-950 flex items-center gap-1.5">
+                    <span>🌱</span> Application & Usage Instructions:
+                  </strong>
+                  <div className="whitespace-pre-line text-xs sm:text-sm text-stone-700 leading-relaxed font-sans">
+                    {product.usageNote}
+                  </div>
                 </div>
               )}
             </div>
@@ -222,12 +332,23 @@ export function ProductDetailPage() {
             </p>
           ))}
 
+          {product.ingredients && (
+            <div className="mt-6 p-4 rounded-2xl bg-stone-50 border border-stone-200">
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.125rem', marginBottom: '0.4rem', color: '#163424' }}>
+                Pure Ingredients & Formula
+              </h3>
+              <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)', lineHeight: 1.6 }}>
+                {product.ingredients}
+              </p>
+            </div>
+          )}
+
           {product.storageInstructions && (
-            <div className="mt-6">
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.125rem', marginBottom: '0.5rem' }}>
+            <div className="mt-5">
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.125rem', marginBottom: '0.4rem', color: '#163424' }}>
                 Storage Instructions
               </h3>
-              <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)', fontStyle: 'italic' }}>
+              <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)' }}>
                 {product.storageInstructions}
               </p>
             </div>

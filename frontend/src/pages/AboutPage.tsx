@@ -1,24 +1,40 @@
 import { motion } from 'framer-motion'
-import { Leaf, Sprout, Heart, Users } from 'lucide-react'
+import { Leaf, Sprout, Heart, Users, FileText, Download, ShieldCheck } from 'lucide-react'
+import { SITE_CONFIG } from '@/config/products'
 
 export function AboutPage() {
   return (
     <div>
-      {/* Header */}
+      {/* Header with Official Logo */}
       <div
         style={{
           background: 'linear-gradient(135deg, var(--color-forest-dark) 0%, var(--color-forest) 100%)',
-          padding: '4rem 0 3rem',
+          padding: '4.5rem 0 3.5rem',
         }}
       >
         <div className="container text-center">
-          <p className="section-tag" style={{ color: 'rgba(168,213,162,0.9)', justifyContent: 'center' }}>About Us</p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'white', marginBottom: '0.75rem' }}>
-            Narmada Gaukhadh
+          <img
+            src={SITE_CONFIG.logoUrl}
+            alt="Narmada Gaukhadh"
+            className="h-16 sm:h-20 w-auto mx-auto mb-5 filter drop-shadow-xl"
+          />
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', color: 'white', marginBottom: '0.75rem' }}>
+            Narmada Gaukhadh & Shivay Dairy Farm
           </h1>
-          <p style={{ fontSize: '1.0625rem', color: 'rgba(255,255,255,0.7)', maxWidth: '500px', margin: '0 auto' }}>
-            Natural agricultural products rooted in traditional Panchagavya farming practices.
+          <p style={{ fontSize: '1.0625rem', color: 'rgba(255,255,255,0.85)', maxWidth: '580px', margin: '0 auto' }}>
+            Pure Desi Gir Cow-based agricultural nutrients rooted in Vedic Panchagavya science. Tested & verified by Anand Agricultural University (AAU).
           </p>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href={SITE_CONFIG.brochurePdf}
+              download={SITE_CONFIG.brochureDirectName}
+              className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-forest hover:bg-emerald-50 transition-all shadow-lg flex items-center gap-2"
+            >
+              <Download size={16} />
+              <span>Download Official Brochure (PDF 19 MB)</span>
+            </a>
+          </div>
         </div>
       </div>
 

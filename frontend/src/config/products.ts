@@ -8,38 +8,36 @@ export const SITE_CONFIG = {
   brandNameGujarati: 'નર્મદા ગૌખાધ',
   tagline: 'Pure Soil. Healthy Crops. Natural Farming.',
   description:
-    'Premium natural agricultural products made using traditional cow-based farming practices.',
-  /** @todo Confirm and set final WhatsApp business number before launch (include country code, no +) */
-  whatsappNumber: '', // e.g. '919876543210'
-  /** @todo Set confirmed phone number */
-  phone: '',
-  /** @todo Set confirmed email */
+    'Premium natural agricultural products made using traditional cow-based farming practices and Panchagavya.',
+  whatsappNumber: '918490047078',
+  phone: '+91 84900 47078',
+  secondaryPhone: '+91 77789 01397',
   email: '',
-  /** @todo Set confirmed business address */
-  address: '',
-  /** @todo Set confirmed city/state */
-  city: '',
+  address: 'Shivmay Dairy Farm, Nr. Patadiya Hanuman Canel, Patra',
+  city: 'Vadodara',
   state: 'Gujarat',
   country: 'India',
+  /** Official Brochure & Logo Assets */
+  brochurePdf: '/NG-Brochure-Gujarati.pdf',
+  brochureDirectName: 'Narmada-Gaukhadh-Gujarati-Brochure.pdf',
+  logoUrl: '/assets/images/logo-web.png',
+  logoCowUrl: '/assets/images/logo-cow.png',
   /** Production domain — update before launch for canonical URLs and OG tags */
   siteUrl: 'https://narmadagaukhadh.com',
-  /** @todo Confirm social handles */
   social: {
-    facebook: '',
+    facebook: 'https://www.facebook.com/NarmadaDairyFarm',
     instagram: '',
     youtube: '',
   },
   /** Announcement bar — set to empty string to hide */
   announcement:
-    '🌿 Natural farming products delivered across India — Order on WhatsApp',
-  /** @todo Confirm actual delivery charges policy before launch */
-  freeDeliveryAbove: 999, // ₹ order value for free delivery (placeholder)
-  defaultDeliveryCharge: 80, // ₹ placeholder — confirm with business
+    '🌿 ૧૦૦% શુદ્ધ દેશી ગીર ગાય આધારિત ખાતર — સત્તાવાર બ્રોશર ઉપલબ્ધ | WhatsApp: +91 84900 47078',
+  freeDeliveryAbove: 999, // ₹ order value for free delivery
+  defaultDeliveryCharge: 80, // ₹ delivery charge
 }
 
 // ============================================================
 // PRODUCT CATALOG
-// All prices are PLACEHOLDER — confirm before accepting real orders
 // ============================================================
 
 export interface PackVariant {
@@ -58,12 +56,11 @@ export interface Product {
   shortDescription: string
   longDescription: string
   category: 'solid' | 'liquid'
-  /** Images: use real product photos. Placeholders listed as '' */
+  /** Images: actual product photos and infographics */
   images: string[]
   variants: PackVariant[]
   usageNote: string
-  /** @todo All details below must be verified by the business before publishing */
-  ingredients: string // leave empty if unverified
+  ingredients: string
   storageInstructions: string
   faqs: { question: string; answer: string }[]
 }
@@ -73,80 +70,89 @@ export const PRODUCTS: Product[] = [
     id: 'vermicompost',
     slug: 'vermicompost',
     name: 'Narmada Gaukhadh Vermicompost',
-    nameGujarati: 'અળસિયું ખાતર',
+    nameGujarati: 'નર્મદા ગૌખાધ અળસિયું ખાતર',
     shortDescription:
-      'Premium organic vermicompost made with cow dung and traditional Panchagavya inputs for healthier soil and stronger crops.',
+      '100% pure & organic vermicompost enriched with Panchagavya. Boosts plant growth, softens soil, enhances water retention, and is free of weed seeds and harmful chemicals.',
     longDescription:
-      'Narmada Gaukhadh Vermicompost is produced using a natural composting process that incorporates cow dung and Panchagavya-based ingredients. Designed to enrich soil structure and support sustainable farming practices.\n\n[PLACEHOLDER: Please provide the full production process, certified ingredients, application rates, and any laboratory test results before publishing.]',
+      'Narmada Gaukhadh Vermicompost is an authentic, cow-based organic fertilizer enriched with traditional Panchagavya and produced at Shivmay Dairy Farm, Vadodara. It nourishes the soil naturally with high microbial biodiversity, essential NPK, and micronutrients.\n\nCrafted with zero synthetic additives and zero harmful chemicals, it restores organic carbon to the soil, conditions root zones, and ensures thriving, healthy yields across all crop cycles and home gardens.',
     category: 'solid',
-    images: ['/assets/images/vermicompost.jpg'],
+    images: [
+      '/assets/images/products/vermicompost-main.webp',
+      '/assets/images/products/vermicompost-how-to-use.webp',
+      '/assets/images/products/vermicompost-benefits.webp',
+      '/assets/images/products/vermicompost-pure-organic.webp',
+    ],
     variants: [
       { id: 'vc-1kg', label: '1 kg', priceInr: 99, weightOrVolume: '1 kg', sku: 'NG-VC-1KG' },
       { id: 'vc-5kg', label: '5 kg', priceInr: 349, weightOrVolume: '5 kg', sku: 'NG-VC-5KG' },
       { id: 'vc-25kg', label: '25 kg', priceInr: 999, weightOrVolume: '25 kg', sku: 'NG-VC-25KG' },
     ],
-    /** @todo Verify with business before publishing */
     usageNote:
-      'Application rate and method must be confirmed with the business before publishing.',
-    ingredients: '', // placeholder — do not invent
+      '1. Prepare the soil: Loosen the top layer of soil (1–2 inches) in a sunny spot.\n2. Mix Vermicompost: Mix Narmada Gaukhadh Vermicompost evenly into the soil before planting.\n3. Plant & Water: Sow seeds or saplings and water gently.\n4. Regular Application: Follow application schedules for repeat seasonal feeding.',
+    ingredients:
+      '100% Pure Cow Dung Compost, Earthworm Castings, enriched with Vedic Panchagavya inputs.',
     storageInstructions:
-      'Store in a cool, dry place away from direct sunlight. [Verify with business]',
+      'Store in a cool, dry, and well-ventilated space away from direct sunlight. Reseal the bag after opening.',
     faqs: [
       {
-        question: 'What is vermicompost?',
+        question: 'What makes Narmada Gaukhadh Vermicompost unique?',
         answer:
-          'Vermicompost is an organic fertilizer produced by earthworms processing organic matter. It improves soil structure and microbial activity.',
+          'It is prepared from pure cow dung and fortified with traditional Panchagavya at Shivmay Dairy Farm, ensuring higher biological activity, no weed seeds, and zero chemicals.',
       },
       {
-        question: 'How is Narmada Gaukhadh Vermicompost made?',
+        question: 'How do I use it for potted plants?',
         answer:
-          '[PLACEHOLDER: The business will provide a verified description of their production process.]',
+          'Loosen 1–2 inches of surface soil, mix in 150g–300g of Vermicompost per 12-inch pot, and water gently. Repeat every 3–4 weeks for optimal growth.',
       },
       {
-        question: 'How do I apply it?',
+        question: 'Is it suitable for vegetables, fruits, and flowers?',
         answer:
-          '[PLACEHOLDER: Application instructions to be confirmed by the business before launch.]',
+          'Yes! It is completely safe and highly beneficial for all flowering plants, lawn grass, kitchen garden vegetables, and open-field agricultural crops.',
       },
     ],
   },
   {
     id: 'vidhyanchal',
     slug: 'vidhyanchal',
-    name: 'Vidhyanchal',
-    nameGujarati: 'વિધ્યાંચળ',
+    name: 'Vidhyanchal Vermiwash',
+    nameGujarati: 'વિંધ્યાચલ વર્મીવોશ (Vermiwash)',
     shortDescription:
-      'A natural liquid agricultural product for sustainable crop care. Details to be confirmed with the business.',
+      '100% organic liquid vermiwash enriched with Panchagavya. Boosts plant growth, strengthens root systems, enhances soil health, and provides natural pest and disease resistance.',
     longDescription:
-      'Vidhyanchal is a liquid-based agricultural product offered by Narmada Gaukhadh.\n\n[PLACEHOLDER: Composition, crop suitability, dosage, application method, benefits, and safety information must all be confirmed and verified by the business before publishing.]',
+      'Vidhyanchal Vermiwash is a natural liquid biological plant tonic extracted during organic vermicomposting and enriched with Panchagavya. Packed with soluble nutrients, enzymes, amino acids, and beneficial growth-promoting microorganisms.\n\nFormulated for easy liquid application through foliar spraying or drip irrigation, Vidhyanchal penetrates foliage rapidly, stimulating early root vigor, lush greenery, and abundant flowering.',
     category: 'liquid',
-    images: ['/assets/images/vidhyanchal.jpg'],
+    images: [
+      '/assets/images/products/vidhyanchal-main.webp',
+      '/assets/images/products/vidhyanchal-promotion.webp',
+      '/assets/images/products/vidhyanchal-ad.webp',
+    ],
     variants: [
       { id: 'vy-500ml', label: '500 ml', priceInr: 149, weightOrVolume: '500 ml', sku: 'NG-VY-500ML' },
       { id: 'vy-1l', label: '1 litre', priceInr: 249, weightOrVolume: '1 litre', sku: 'NG-VY-1L' },
       { id: 'vy-5l', label: '5 litres', priceInr: 799, weightOrVolume: '5 litres', sku: 'NG-VY-5L' },
       { id: 'vy-20l', label: '20 litres', priceInr: 2499, weightOrVolume: '20 litres', sku: 'NG-VY-20L' },
     ],
-    /** @todo Verify with business before publishing */
     usageNote:
-      'Application rate, dilution ratio, and compatible crops must be confirmed with the business before publishing.',
-    ingredients: '', // placeholder — do not invent
+      'Foliar Spray: Mix 50 ml per 15 litres of water in a spray pump. Spray evenly on leaves during early morning or sunset.\nDrip / Soil Application: 1–2 litres per acre mixed with irrigation water.\nGarden / Potted Plants: Mix 10 ml per litre of water and spray every 10–14 days.',
+    ingredients:
+      'Pure organic Vermiwash extract, fortified with fermented Panchagavya bio-enzymes and natural growth promoters.',
     storageInstructions:
-      'Store in a cool, dry place. Keep away from direct sunlight. [Verify with business]',
+      'Store in a cool, shaded place away from direct sunlight. Shake well before use. Keep cap tightly closed.',
     faqs: [
       {
-        question: 'What is Vidhyanchal used for?',
+        question: 'What is Vidhyanchal Vermiwash?',
         answer:
-          '[PLACEHOLDER: Crop suitability and benefits to be confirmed by the business before launch.]',
+          'Vermiwash is a nutrient-rich organic liquid wash collected during earthworm digestion, enriched with Panchagavya. It contains essential plant growth hormones (auxins, cytokinins) and disease-suppressing microbes.',
       },
       {
-        question: 'How do I apply Vidhyanchal?',
+        question: 'How do I apply Vidhyanchal Vermiwash?',
         answer:
-          '[PLACEHOLDER: Application instructions to be confirmed by the business before launch.]',
+          'Dilute with clean water (50ml per 15L spray tank, or 10ml per 1L for home plants) and spray directly onto foliage or drench the soil around roots.',
       },
       {
-        question: 'Is it safe for all crops?',
+        question: 'Can I use Vermicompost and Vidhyanchal together?',
         answer:
-          '[PLACEHOLDER: Crop compatibility to be confirmed by the business before launch.]',
+          'Yes, they complement each other perfectly! Vermicompost provides long-lasting soil nourishment, while Vidhyanchal Vermiwash provides immediate foliar uptake for rapid growth and vibrant blooms.',
       },
     ],
   },
